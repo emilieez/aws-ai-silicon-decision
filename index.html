@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AWS AI Silicon Decision</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#context" aria-label="Back to context">
+      <span class="brand-mark">AWS</span>
+      <span><strong>AI silicon</strong><small>Decision exhibit · Aug 2023</small></span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#context" class="nav-link active">Context</a>
+      <a href="#economics" class="nav-link">Economics</a>
+      <a href="#strategies" class="nav-link">Strategies</a>
+      <a href="#uncertainty" class="nav-link">Uncertainty</a>
+      <a href="#option" class="nav-link">Option</a>
+      <a href="#outcome" class="nav-link">Outcome</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="context" class="hero section-wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">BOARD BRIEFING · AUGUST 2023</p>
+        <h1>Build, buy,<br><em>or both?</em></h1>
+        <p class="lede">AWS should reduce Nvidia dependence without giving up Nvidia's performance or customer choice.</p>
+        <p class="section-note">This exhibit follows the decision from its 2023 assumptions through the later outcome. “Illustrative” figures are model inputs, not AWS-reported costs.</p>
+      </div>
+      <div class="pressures">
+        <article><span>01</span><div><small>SUPPLY</small><strong>H100s rationed</strong><p>Availability constrains cloud growth.</p></div></article>
+        <article><span>02</span><div><small>COST</small><strong>GPU margin rises</strong><p>AWS pays the supplier margin on its fastest-growing input.</p></div></article>
+        <article><span>03</span><div><small>GROWTH</small><strong>12% AWS growth</strong><p>The slowest rate since reporting began.</p></div></article>
+      </div>
+      <div class="recommendation"><span>RECOMMENDATION</span><strong>Dual-track + anchor customer</strong><small>Keep Nvidia · stage Trainium · scale only when gates pass</small></div>
+    </section>
+
+    <section id="economics" class="section section-wrap">
+      <div class="section-heading">
+        <div><p class="eyebrow">01 · ENGINEERING ECONOMICS</p><h2>The volume threshold</h2></div>
+        <p>Custom silicon is a fixed-cost bet. Savings across enough deployed chips turn its economics positive.</p>
+      </div>
+      <p class="section-note">Read the chart as deployed volume versus the break-even line. Change the assumptions to see the threshold and net result update live.</p>
+
+      <div class="calc-grid">
+        <aside class="control-panel">
+          <div class="control-title"><span>Assumption lab</span><span class="live-dot">LIVE</span></div>
+          <label><span>Fixed cost per generation</span><output id="fixedOut">$3.0B</output></label>
+          <input id="fixedCost" type="range" min="1" max="6" step="0.1" value="3">
+
+          <label><span>GPU-equivalent 4-year cost</span><output id="gpuOut">$50k</output></label>
+          <input id="gpuCost" type="range" min="30" max="100" step="5" value="50">
+
+          <label><span>Custom-chip saving</span><output id="savingOut">40%</output></label>
+          <input id="savingRate" type="range" min="10" max="60" step="5" value="40">
+
+          <label><span>Chips deployed</span><output id="volumeOut">250k</output></label>
+          <input id="volume" type="range" min="0" max="600" step="10" value="250">
+        </aside>
+
+        <div class="chart-panel">
+          <div class="chart-head">
+            <div><small>BREAK-EVEN VOLUME</small><strong id="breakEven">150,000 chips</strong></div>
+            <div id="statusBadge" class="status positive">PROGRAM POSITIVE</div>
+          </div>
+          <div class="formula">Fixed cost ÷ saving per chip = <span id="formulaText">$3.0B ÷ $20k</span></div>
+          <div class="volume-chart">
+            <div class="chart-axis"><span>600k</span><span>450k</span><span>300k</span><span>150k</span><span>0</span></div>
+            <div class="plot">
+              <div class="threshold" id="thresholdLine"><span id="thresholdLabel">150k threshold</span></div>
+              <div class="bar custom-bar" id="customBar"></div>
+              <div class="volume-marker" id="volumeMarker"><span id="volumeMarkerLabel">250k deployed</span></div>
+            </div>
+          </div>
+          <div class="results-row">
+            <div><small>Savings generated</small><strong id="generatedSavings">$5.0B</strong></div>
+            <div><small>Net before switching costs</small><strong id="netResult">+$2.0B</strong></div>
+            <div><small>Margin vs threshold</small><strong id="marginResult">+100k chips</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="presets">
+        <span>View scenario</span>
+        <button data-preset="pessimistic">Pessimistic · 80k / 20%</button>
+        <button data-preset="likely" class="active">Likely · 250k / 40%</button>
+        <button data-preset="optimistic">Optimistic · 500k / 50%</button>
+        <button data-preset="rainier">Project Rainier · 500k / 40%</button>
+      </div>
+      <details class="calculation-note">
+        <summary>How the estimate is calculated</summary>
+        <p><strong>Savings per chip</strong> = GPU-equivalent cost × custom saving = <span id="savingPerChipCalc">$50k × 40% = $20k</span>.</p>
+        <p><strong>Break-even volume</strong> = fixed cost ÷ savings per chip = <span id="breakEvenCalc">$3.0B ÷ $20k = 150,000 chips</span>.</p>
+        <p><strong>Net before switching costs</strong> = deployed chips × savings per chip − fixed cost. This simplified model excludes porting and other costs.</p>
+      </details>
+    </section>
+
+    <section id="strategies" class="section dark section-wrap">
+      <div class="section-heading inverse">
+        <div><p class="eyebrow">02 · THE CHOICE</p><h2>One strategy hedges twice</h2></div>
+        <p>Select a strategy to inspect its trade-off.</p>
+      </div>
+      <p class="section-note inverse-note">Expected NPV weights each possible outcome by its probability. Card bars are qualitative: performance · cost efficiency · supply resilience · execution risk (higher risk is less desirable).</p>
+      <div class="strategy-grid">
+        <button class="strategy-card" data-strategy="nvidia">
+          <div class="card-num">A</div>
+          <h3>Nvidia only</h3>
+          <p class="card-tag">Maximum performance</p>
+          <div class="metric"><small>EXPECTED NPV</small><strong id="cardNvidiaEV">−$2.0B</strong></div>
+          <div class="mini-radar" data-values="90,30,20,85"><i></i><i></i><i></i><i></i></div>
+        </button>
+        <button class="strategy-card selected" data-strategy="dual">
+          <div class="card-num">D</div>
+          <h3>Dual-track + anchor</h3>
+          <p class="card-tag">Choice · flexibility · volume</p>
+          <div class="metric"><small>EXPECTED NPV</small><strong id="cardDualEV">+$3.15B</strong></div>
+          <div class="mini-radar" data-values="75,75,82,78"><i></i><i></i><i></i><i></i></div>
+        </button>
+        <button class="strategy-card" data-strategy="custom">
+          <div class="card-num">E</div>
+          <h3>All-in custom</h3>
+          <p class="card-tag">Maximum upside, tail risk</p>
+          <div class="metric"><small>EXPECTED NPV</small><strong id="cardCustomEV">+$0.30B</strong></div>
+          <div class="mini-radar" data-values="55,90,55,25"><i></i><i></i><i></i><i></i></div>
+        </button>
+      </div>
+      <div class="strategy-detail" id="strategyDetail">
+        <div><small>WHY IT WINS</small><p>Nvidia protects immediate performance while an anchor customer resolves demand uncertainty and lowers break-even risk.</p></div>
+        <div><small>DOWNSTREAM RISK</small><strong>−$3B if the chip fails</strong></div>
+        <div><small>DECISION RULE</small><strong>Scale only after gates pass</strong></div>
+      </div>
+      <details class="calculation-note dark-note">
+        <summary>How baseline expected NPV is calculated</summary>
+        <p>These examples use the starting probabilities shown when the page loads.</p>
+        <p>Nvidia only: (50% × −$4B) + (50% × $0B) = <strong>−$2.0B</strong>.</p>
+        <p>Dual-track: 75% × [(60% × $8B) + (40% × $1B)] + 25% × (−$3B) = <strong>+$3.15B</strong>.</p>
+        <p>All-in custom: 75% × [(60% × $10B) + (40% × −$4B)] + 25% × (−$12B) = <strong>+$0.30B</strong>.</p>
+      </details>
+    </section>
+
+    <section id="uncertainty" class="section section-wrap">
+      <div class="section-heading">
+        <div><p class="eyebrow">03 · DECISION ANALYSIS</p><h2>How an anchor customer changes the bet</h2></div>
+        <p>Roll back the tree to see the expected value of each strategy.</p>
+      </div>
+      <p class="section-note">The tree separates AWS’s choices from uncertain outcomes. Adjust the probabilities to see how expected values change.</p>
+
+      <div class="tree-layout">
+        <aside class="prob-panel">
+          <label><span>Chip works</span><output id="worksOut">75%</output></label>
+          <input id="worksProb" type="range" min="25" max="95" step="5" value="75">
+          <label><span>High adoption if it works</span><output id="adoptionOut">60%</output></label>
+          <input id="adoptionProb" type="range" min="20" max="90" step="5" value="60">
+          <button id="resetTree">Reset probabilities</button>
+        </aside>
+
+        <div class="decision-tree">
+          <div class="decision-node"><small>DECISION</small><strong>AWS sourcing strategy</strong></div>
+          <div class="branch-rail"></div>
+          <div class="tree-branches">
+            <article class="tree-strategy nvidia-tree">
+              <h3>Nvidia only</h3><span>Squeeze 50% · −$4B</span><span>No squeeze 50% · $0B</span>
+              <strong id="nvidiaEV">EV −$2.00B</strong>
+            </article>
+            <article class="tree-strategy dual-tree winner">
+              <h3>Dual-track <b>BEST</b></h3>
+              <div class="chance"><span>Works <i id="worksLabel">75%</i></span><b>High <i id="highLabel">60%</i> · +$8B</b><b>Low <i id="lowLabel">40%</i> · +$1B</b></div>
+              <div class="fail">Fails <i id="failsLabel">25%</i> · −$3B</div>
+              <strong id="dualEV">EV +$3.15B</strong>
+            </article>
+            <article class="tree-strategy custom-tree">
+              <h3>All-in custom</h3><div class="chance"><span>Works <i id="customWorksLabel">75%</i></span><b>High <i id="customHighLabel">60%</i> · +$10B</b><b>Low <i id="customLowLabel">40%</i> · −$4B</b></div><div class="fail">Fails <i id="customFailsLabel">25%</i> · −$12B</div>
+              <strong id="customEV">EV +$0.30B</strong>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="voi-strip">
+        <div><small id="withoutInfoLabel">BEST SCALE CHOICE, NO SIGNAL · LARGE</small><strong id="withoutInfo">+$4.00B</strong></div>
+        <div class="voi-arrow">→</div>
+        <div><small>WITH PERFECT ADOPTION SIGNAL</small><strong id="withInfo">+$5.20B</strong></div>
+        <div class="voi-value"><small>VALUE OF INFORMATION</small><strong id="voiValue">+$1.20B</strong></div>
+      </div>
+      <p class="micro-note">Information value is conditional on the chip working and applies to the later capacity decision—not the initial strategy choice.</p>
+      <details class="calculation-note">
+        <summary>How expected value and information value are calculated</summary>
+        <p><strong>Strategy expected value</strong> = sum of (branch probability × branch payoff). For dual-track: P(works) × [P(high) × $8B + P(low) × $1B] + P(fails) × −$3B.</p>
+        <p><strong>Scale choice without a signal</strong> = higher expected payoff: large = P(high) × $8B + P(low) × −$2B; small = P(high) × $3B + P(low) × $1B.</p>
+        <p><strong>With a signal</strong> = P(high) × $8B + P(low) × $1B. <strong>Information value</strong> = with-signal value − best no-signal value. At 60% high adoption: $5.2B − $4.0B = $1.2B.</p>
+      </details>
+    </section>
+
+    <section id="option" class="section option-section section-wrap">
+      <div class="section-heading">
+        <div><p class="eyebrow">04 · REAL OPTIONS</p><h2>The right to scale is worth more than scale today</h2></div>
+        <p>Dual-track buys the option to wait, not an obligation to expand.</p>
+      </div>
+      <p class="section-note">Compare an immediate commitment with a staged choice that can be exercised only when demand is strong.</p>
+      <div class="option-grid">
+        <div class="option-view static-view">
+          <small>STATIC NPV</small>
+          <div class="payoff"><span>Present value of savings</span><strong>$6.0B</strong></div>
+          <div class="payoff"><span>Capacity commitment</span><strong>−$7.0B</strong></div>
+          <div class="payoff result"><span>Net result</span><strong>−$1.0B</strong></div>
+          <p>Do not scale immediately.</p>
+        </div>
+          <button class="option-toggle" id="optionToggle" aria-label="Reveal real options value"><span></span><strong>REVEAL FLEXIBILITY</strong></button>
+        <div class="option-view flexible-view" id="flexibleView">
+          <small>WITH REAL OPTION</small>
+          <div class="lattice">
+            <div class="lattice-top"><span>$16.3B</span><b>Exercise</b></div>
+            <div class="lattice-mid"><span>$6.0B</span><b>Hold</b></div>
+            <div class="lattice-bottom"><span>$2.2B</span><b>Abandon</b></div>
+          </div>
+          <div class="payoff result"><span>Option value</span><strong>+$1.5B</strong></div>
+          <p>Keep one generation alive; scale only after demand is proven.</p>
+        </div>
+      </div>
+      <details class="calculation-note">
+        <summary>How the option estimate is calculated</summary>
+        <p><strong>Static NPV</strong> = present value of savings − capacity cost = $6.0B − $7.0B = <strong>−$1.0B</strong>.</p>
+        <p>For the illustrative two-step binomial model: u = e<sup>σ√Δt</sup> = 1.649, d = 1/u = 0.607, and p = (e<sup>rΔt</sup> − d)/(u − d) ≈ 0.422. Terminal values are $6B × u², $6B, and $6B × d²; exercise payoff is max(value − $7B, 0).</p>
+        <p>Discounting the probability-weighted exercise payoffs backward gives an option value of about <strong>+$1.5B</strong>. It is an estimate based on the stated assumptions.</p>
+      </details>
+    </section>
+
+    <section id="outcome" class="section outcome-section section-wrap">
+      <div class="section-heading inverse">
+        <div><p class="eyebrow">05 · THE REVEAL</p><h2>Good decision — and favorable demand</h2></div>
+        <p>Compare the 2023 recommendation with the 2025–2026 outcome.</p>
+      </div>
+      <p class="section-note inverse-note">This is a forecast-versus-outcome check: break-even is modeled; Rainier and run-rate figures are reported later case outcomes.</p>
+      <div class="gates">
+        <article><button aria-label="Toggle economics gate"></button><div><small>ECONOMICS</small><strong>≥30% verified saving</strong></div><span>Met</span></article>
+        <article><button aria-label="Toggle performance gate"></button><div><small>PERFORMANCE</small><strong>Customer SLA targets</strong></div><span>Met</span></article>
+        <article><button aria-label="Toggle adoption gate"></button><div><small>ADOPTION</small><strong>Outside usage grows</strong></div><span>Met</span></article>
+        <article><button aria-label="Toggle supply gate"></button><div><small>SUPPLY</small><strong>No new bottleneck</strong></div><span>Open</span></article>
+      </div>
+      <div class="timeline">
+        <div class="forecast"><small>2023 FORECAST</small><strong>150k</strong><span>break-even chips</span></div>
+        <div class="timeline-line"></div>
+        <div class="actual"><small>2025 ACTUAL</small><strong>~500k</strong><span>Project Rainier chips</span></div>
+        <div class="actual late"><small>2026 ACTUAL</small><strong>$20B+</strong><span>annual custom-chip run rate</span></div>
+      </div>
+      <p class="micro-note inverse-note">At the illustrative 150,000-chip threshold, about 500,000 deployed chips would exceed break-even by roughly 350,000. Actual AWS cost and savings are not disclosed here.</p>
+      <blockquote>“The strategy was right. The scale of demand was beyond the optimistic case.”</blockquote>
+    </section>
+  </main>
+
+  <footer>
+    <span>CSCI E-188 · Amazon custom silicon case</span>
+    <span><a href="webpage-guide.md">Detailed explanation &amp; calculations</a> · Illustrative model</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
